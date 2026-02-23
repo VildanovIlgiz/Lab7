@@ -12,7 +12,7 @@ class Weather:
             "lon": lon,
             "appid": self.key,
             "units": "metric",
-            "lang": "ru"сд
+            "lang": "ru"
         }
 
         r = requests.get(self.url, prms)
