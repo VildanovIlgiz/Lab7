@@ -29,5 +29,6 @@ class Weather:
         print("Давление:", data["main"]["pressure"], "hPa")
 
 
-weather = Weather("9983b0af3812b443d3236b58660d96f2")
-weather.get(43.12, 5.30)
+if __name__ == "__main__":
+    weather = Weather("9983b0af3812b443d3236b58660d96f2")
+    weather.get(43.12, 5.30)

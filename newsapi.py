@@ -42,6 +42,7 @@ class NewsAPI:
             print("Ссылка    :", article["url"])
             print("Описание  :", article["description"])
 
-api = NewsAPI("5886b96f6755446594793226bdc69eec")
-data = api.get_news()
-api.print_news()
+if __name__ == "__main__":
+    api = NewsAPI("5886b96f6755446594793226bdc69eec")
+    api.get_news()
+    api.print_news()
