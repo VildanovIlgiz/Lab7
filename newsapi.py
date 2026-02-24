@@ -19,8 +19,8 @@ class NewsAPI:
             "apiKey": self.api_key
         }
 
-        response = requests.get(url, params=params)
-        self.data = response.json()
+        resp = requests.get(url, params=params)
+        self.data = resp.json()
 
     def print_news(self):
         data = self.data
@@ -31,7 +31,8 @@ class NewsAPI:
         
         if data.get("status") != "ok":
             print("Ошибка API:", data)
-            return
+            return        
+        
         for i in range(len(data["articles"])):
             article = data["articles"][i]
             print(f"Новость № {i+1}")
