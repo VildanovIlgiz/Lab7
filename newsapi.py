@@ -1,49 +1,61 @@
 import requests 
 import json
+import os
 #5886b96f6755446594793226bdc69eec API
+
+BASE_URL = "https://newsapi.org/v2/top-headlines"
 
 
 class NewsAPI:
-
-    def __init__(self, api_key):
+    def __init__(self, api_key: str):
         self.api_key = api_key
-        self.url = "https://newsapi.org/v2/top-headlines"
         self.data = None
 
-    def get_news(self):
-        url = self.url
+    def get_news(self, country="us", page_size=3):
         params = {
-            "country": "us",
-            "q": "Trump",
-            "pageSize": 3,
+            "country": country,
+            "pageSize": page_size,
             "apiKey": self.api_key
         }
 
-        resp = requests.get(url, params=params)
-        self.data = resp.json()
+        try:
+            response = requests.get(BASE_URL, params=params, timeout=10)
+            response.raise_for_status()
+            self.data = response.json()
+        except requests.RequestException as e:
+            print("Ошибка при получении данных:", e)
+            self.data = None
 
     def print_news(self):
-        data = self.data
-        
-        if not data:
-            print("Нет данных для отображения. Сначала вызовите get_news()")
+        if not self.data:
+            print("Нет данных. Сначала вызовите get_news()")
             return
-        
-        if data.get("status") != "ok":
-            print("Ошибка API:", data)
-            return        
-        
-        for i in range(len(data["articles"])):
-            article = data["articles"][i]
-            print(f"Новость № {i+1}")
-            print("Источник  :", article["source"]["name"])
-            print("Заголовок :", article["title"])
-            print("Автор     :", article["author"])
-            print("Дата      :", article["publishedAt"])
-            print("Ссылка    :", article["url"])
-            print("Описание  :", article["description"])
+
+        if self.data.get("status") != "ok":
+            print("Ошибка API:", self.data.get("message", "Неизвестная ошибка"))
+            return
+
+        articles = self.data.get("articles", [])
+
+        for i, article in enumerate(articles, start=1):
+            try:
+                print(f"\nНовость № {i}")
+                print("Источник  :", article["source"]["name"])
+                print("Заголовок :", article["title"])
+                print("Автор     :", article.get("author"))
+                print("Дата      :", article["publishedAt"])
+                print("Ссылка    :", article["url"])
+                print("Описание  :", article.get("description"))
+            except (KeyError, TypeError):
+                print("Ошибка структуры данных — формат API мог измениться.")
+
 
 if __name__ == "__main__":
-    api = NewsAPI("5886b96f6755446594793226bdc69eec")
-    api.get_news()
-    api.print_news()
+    api_key = os.getenv("NEWS_API_KEY")
+
+    if not api_key:
+        print("Переменная окружения NEWS_API_KEY не установлена.")
+    else:
+        api = NewsAPI(api_key)
+        api.get_news()
+        api.print_news()
