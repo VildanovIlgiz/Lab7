@@ -1,7 +1,6 @@
 import requests 
 import json
 import os
-#5886b96f6755446594793226bdc69eec API
 
 BASE_URL = "https://newsapi.org/v2/top-headlines"
 

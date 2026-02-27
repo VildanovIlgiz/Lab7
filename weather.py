@@ -1,7 +1,5 @@
 import requests
 import os
-# 9983b0af3812b443d3236b58660d96f2 API
-
 
 BASE_URL = "https://api.openweathermap.org/data/2.5/weather"
 
